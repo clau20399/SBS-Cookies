@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBS Cookies | Cardápio Digital & Pedidos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display (Elegante) & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        choco: {
+                            50: '#fdf8f6',
+                            100: '#f2e8e5',
+                            200: '#e8d4cf',
+                            500: '#b87355',
+                            800: '#4a2c20',
+                            900: '#2d1a13',
+                        },
+                        cream: {
+                            50: '#fffdfa',
+                            100: '#fdf6ed',
+                            200: '#f7e8d3',
+                        },
+                        pinksoft: '#f8e5e5',
+                        brandGold: '#d4af37'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth scrolling e scrollbar customizada */
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #fdf6ed; }
+        ::-webkit-scrollbar-thumb { background: #b87355; border-radius: 4px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-cream-100 text-choco-900 font-sans antialiased min-h-screen pb-24 md:pb-12">
+
+    <!-- CABEÇALHO DA LOJA -->
+    <header class="relative bg-choco-900 text-white shadow-xl overflow-hidden">
+        <!-- Banner de Fundo Decorativo com a foto enviada dos cookies na grade -->
+        <div class="absolute inset-0 opacity-35 bg-cover bg-center" style="background-image: url('WhatsApp Image 2026-10-28 at 14.55.45.jpg');"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-choco-900 via-choco-900/80 to-transparent"></div>
+
+        <div class="max-w-4xl mx-auto px-4 pt-8 pb-6 relative z-10 text-center md:text-left md:flex md:items-center md:justify-between">
+            <div class="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-5">
+                <!-- Logo / Avatar -->
+                <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-pinksoft shadow-lg overflow-hidden bg-cream-50 flex items-center justify-center text-choco-800 text-3xl font-serif font-bold">
+                    🍪
+                </div>
+                <div>
+                    <div class="flex items-center justify-center md:justify-start gap-2">
+                        <h1 class="text-2xl md:text-3xl font-serif font-bold text-cream-100">SBS Cookies</h1>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500 text-white animate-pulse">
+                            <span class="w-2 h-2 mr-1 bg-white rounded-full"></span> Aberto
+                        </span>
+                    </div>
+                    <p class="text-sm text-choco-200 mt-1 max-w-md">Cookies artesanais inesquecíveis! Crocantes por fora, macios por dentro e super recheados. 💖</p>
+                    <div class="mt-2 flex items-center justify-center md:justify-start space-x-4 text-xs text-cream-200">
+                        <span><i class="fa-regular fa-clock text-pinksoft mr-1"></i> 13:00 - 19:00</span>
+                        <span><i class="fa-solid fa-location-dot text-pinksoft mr-1"></i> Entregas & Retirada</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão Direto WhatsApp / Configuração -->
+            <div class="mt-4 md:mt-0 flex items-center justify-center gap-2">
+                <button onclick="openConfigModal()" class="bg-choco-800 hover:bg-choco-500 text-cream-100 text-xs py-2 px-3 rounded-xl transition border border-choco-500/30 flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-gear text-brandGold"></i> Meu Zap
+                </button>
+                <a id="btnDirectWhatsapp" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs py-2 px-3.5 rounded-xl transition flex items-center gap-1.5 shadow font-medium">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> Falar no Zap
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVEGAÇÃO / BARRAS DE BUSCA E CATEGORIAS -->
+    <main class="max-w-4xl mx-auto px-4 mt-6">
+        
+        <!-- Campo de Busca -->
+        <div class="relative mb-6">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-choco-500"></i>
+            <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Buscar seu cookie favorito..." class="w-full pl-11 pr-4 py-3 bg-white rounded-2xl shadow-sm border border-choco-100 focus:outline-none focus:ring-2 focus:ring-choco-500 text-choco-900 placeholder-choco-500/60 text-sm transition">
+        </div>
+
+        <!-- Scroll Horizontal de Categorias -->
+        <div class="flex space-x-2 overflow-x-auto pb-3 mb-6 hide-scrollbar">
+            <button onclick="filterCategory('todos')" class="cat-btn active px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition shadow-sm bg-choco-800 text-white">
+                ✨ Todos
+            </button>
+            <button onclick="filterCategory('tradicionais')" class="cat-btn px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition shadow-sm bg-white text-choco-800 hover:bg-choco-50 border border-choco-100">
+                🍪 Tradicional
+            </button>
+            <button onclick="filterCategory('nutella')" class="cat-btn px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition shadow-sm bg-white text-choco-800 hover:bg-choco-50 border border-choco-100">
+                🍫 Nutella
+            </button>
+            <button onclick="filterCategory('ovomaltine')" class="cat-btn px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition shadow-sm bg-white text-choco-800 hover:bg-choco-50 border border-choco-100">
+                ✨ Ovomaltine
+            </button>
+        </div>
+
+        <!-- GRID DE PRODUTOS -->
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <!-- Produtos serão renderizados via JavaScript aqui -->
+        </div>
+
+        <!-- Mensagem de NENHUM PRODUTO ENCONTRADO -->
+        <div id="emptySearch" class="hidden text-center py-12">
+            <div class="text-4xl mb-3">🍪🔍</div>
+            <h3 class="font-serif font-bold text-lg text-choco-800">Nenhum cookie encontrado</h3>
+            <p class="text-sm text-choco-500 mt-1">Tente buscar por outro termo ou selecione outra categoria.</p>
+        </div>
+    </main>
+
+    <!-- BARRA FIXA / FLUTUANTE DE CARRINHO (MOBILE & DESKTOP) -->
+    <div id="cartBar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-choco-100 shadow-2xl z-30 p-4 transition-transform duration-300 transform translate-y-full">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="openCartModal()">
+                <div class="relative bg-choco-800 text-white w-12 h-12 rounded-2xl flex items-center justify-center shadow">
+                    <i class="fa-solid fa-basket-shopping text-lg"></i>
+                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
+                </div>
+                <div>
+                    <p class="text-xs text-choco-500 uppercase font-bold tracking-wider">Subtotal</p>
+                    <p id="cartBarTotal" class="text-lg font-serif font-bold text-choco-900">R$ 0,00</p>
+                </div>
+            </div>
+            <button onclick="openCartModal()" class="bg-choco-800 hover:bg-choco-900 text-white font-semibold py-3 px-6 rounded-xl text-sm shadow-md transition flex items-center gap-2">
+                Ver Carrinho <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DO CARRINHO / FINALIZAÇÃO -->
+    <div id="cartModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-end opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-cream-50 w-full max-w-md h-full flex flex-col shadow-2xl transition-transform duration-300 transform translate-x-full" id="cartModalContent">
+            
+            <!-- Header do Modal -->
+            <div class="p-4 bg-choco-900 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-cookie-bite text-pinksoft"></i>
+                    <h2 class="font-serif font-bold text-lg">Seu Pedido</h2>
+                </div>
+                <button onclick="closeCartModal()" class="w-8 h-8 rounded-full bg-choco-800 text-cream-200 hover:bg-choco-500 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Corpo do Modal (Scrollable) -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-6">
+                
+                <!-- Lista dos Itens do Carrinho -->
+                <div>
+                    <h3 class="text-xs font-bold text-choco-500 uppercase tracking-wider mb-3">Itens Selecionados</h3>
+                    <div id="cartItemsList" class="space-y-3">
+                        <!-- Renderizado via JS -->
+                    </div>
+                </div>
+
+                <hr class="border-choco-100">
+
+                <!-- Formulário de Entrega e Dados -->
+                <form id="orderForm" class="space-y-4">
+                    <h3 class="text-xs font-bold text-choco-500 uppercase tracking-wider">Dados da Entrega</h3>
+                    
+                    <!-- Opção Entrega ou Retirada -->
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="deliveryOption" value="delivery" checked onchange="toggleDeliveryType()" class="peer hidden">
+                            <div class="p-3 bg-white border border-choco-200 rounded-xl text-center peer-checked:border-choco-800 peer-checked:bg-choco-800 peer-checked:text-white transition shadow-sm">
+                                <i class="fa-solid fa-motorcycle text-base mb-1 block"></i>
+                                <span class="text-xs font-semibold">Delivery</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="deliveryOption" value="pickup" onchange="toggleDeliveryType()" class="peer hidden">
+                            <div class="p-3 bg-white border border-choco-200 rounded-xl text-center peer-checked:border-choco-800 peer-checked:bg-choco-800 peer-checked:text-white transition shadow-sm">
+                                <i class="fa-solid fa-store text-base mb-1 block"></i>
+                                <span class="text-xs font-semibold">Retirada na Loja</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Nome do Cliente -->
+                    <div>
+                        <label class="block text-xs font-semibold text-choco-800 mb-1">Seu Nome *</label>
+                        <input type="text" id="clientName" required placeholder="Ex: Maria Silva" class="w-full px-3 py-2 bg-white border border-choco-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-choco-500">
+                    </div>
+
+                    <!-- Endereço (Visível apenas se Delivery) -->
+                    <div id="addressFields" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-choco-800 mb-1">Endereço de Entrega *</label>
+                            <input type="text" id="clientAddress" placeholder="Rua, Número e Bairro" class="w-full px-3 py-2 bg-white border border-choco-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-choco-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-choco-800 mb-1">Ponto de Referência</label>
+                            <input type="text" id="clientRef" placeholder="Ex: Próximo à praça principal" class="w-full px-3 py-2 bg-white border border-choco-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-choco-500">
+                        </div>
+                    </div>
+
+                    <!-- Forma de Pagamento -->
+                    <div>
+                        <label class="block text-xs font-semibold text-choco-800 mb-1">Forma de Pagamento *</label>
+                        <select id="paymentMethod" required class="w-full px-3 py-2 bg-white border border-choco-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-choco-500 text-choco-900">
+                            <option value="Pix">PIX (Chave enviada no WhatsApp)</option>
+                            <option value="Cartão de Crédito/Débito">Cartão (Na Entrega/Retirada)</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                        </select>
+                    </div>
+
+                    <!-- Observações -->
+                    <div>
+                        <label class="block text-xs font-semibold text-choco-800 mb-1">Observações ou Recado Especial</label>
+                        <textarea id="orderNotes" rows="2" placeholder="Ex: Enviar para presente com bilhetinho, sem granulado, etc..." class="w-full px-3 py-2 bg-white border border-choco-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-choco-500"></textarea>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- Rodapé do Modal (Resumo Financeiro & Botão WhatsApp) -->
+            <div class="p-4 bg-white border-t border-choco-100 shadow-lg space-y-3">
+                <div class="space-y-1 text-sm">
+                    <div class="flex justify-between text-choco-500">
+                        <span>Subtotal</span>
+                        <span id="modalSubtotal">R$ 0,00</span>
+                    </div>
+                    <div id="deliveryFeeRow" class="flex justify-between text-choco-500">
+                        <span>Taxa de Entrega (A combinar)</span>
+                        <span class="text-xs bg-pinksoft text-choco-800 px-2 py-0.5 rounded font-medium">A definir</span>
+                    </div>
+                    <div class="flex justify-between font-serif font-bold text-lg text-choco-900 pt-1 border-t border-dashed border-choco-100">
+                        <span>Total</span>
+                        <span id="modalTotal">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <button onclick="sendOrderToWhatsapp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition flex items-center justify-center space-x-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Enviar Pedido via WhatsApp</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÃO DE WHATSAPP (PARA O VENDEDOR) -->
+    <div id="configModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-serif font-bold text-choco-900">Configurar Número do Zap</h3>
+                <button onclick="closeConfigModal()" class="text-choco-500 hover:text-choco-900"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-choco-500">Digite seu WhatsApp com DDD para testar o envio direto dos pedidos:</p>
+            <div>
+                <label class="block text-xs font-semibold text-choco-800 mb-1">WhatsApp da Sua Loja</label>
+                <input type="text" id="sellerPhoneInput" placeholder="Ex: 5511999999999" class="w-full px-3 py-2 border rounded-xl text-sm font-mono">
+                <span class="text-[10px] text-choco-500">Formato: DDI + DDD + Número (Apenas números)</span>
+            </div>
+            <button onclick="saveSellerPhone()" class="w-full bg-choco-800 hover:bg-choco-900 text-white py-2.5 rounded-xl font-medium text-sm">
+                Salvar Número
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DE LÓGICA DO CARDÁPIO & CARRINHO -->
+    <script>
+        // --- BASE DE DADOS DOS COOKIES E PRODUTOS (SBS COOKIES) ---
+        const products = [
+            {
+                id: 1,
+                name: "Cookie Tradicional",
+                category: "tradicionais",
+                price: 18.00,
+                description: "Cookie clássico com massa macia e generosas gotas de chocolate meio amargo.",
+                image: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&q=80&w=600",
+                badge: "Clássico"
+            },
+            {
+                id: 2,
+                name: "Cookie de Nutella",
+                category: "nutella",
+                price: 18.00,
+                description: "Cookie recheado com pura Nutella cremosa e cobertura de gotas de chocolate.",
+                image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=600",
+                badge: "Mais Pedido"
+            },
+            {
+                id: 3,
+                name: "Cookie de Ovomaltine",
+                category: "ovomaltine",
+                price: 18.00,
+                description: "Cookie com crocantes de Ovomaltine e recheio cremoso irresistível.",
+                image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&q=80&w=600",
+                badge: "Crocante"
+            }
+        ];
+
+        // Estado do Carrinho e Configurações
+        let cart = {};
+        let currentCategory = 'todos';
+        let sellerPhone = '5511999999999'; // Número padrão configurável
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedPhone = localStorage.getItem('cookie_seller_phone');
+            if (savedPhone) sellerPhone = savedPhone;
+            document.getElementById('sellerPhoneInput').value = sellerPhone;
+            updateDirectWhatsappLink();
+
+            renderProducts();
+        });
+
+        // Configuração do WhatsApp
+        function openConfigModal() {
+            document.getElementById('configModal').classList.remove('hidden');
+        }
+        function closeConfigModal() {
+            document.getElementById('configModal').classList.add('hidden');
+        }
+        function saveSellerPhone() {
+            const val = document.getElementById('sellerPhoneInput').value.replace(/\D/g, '');
+            if (val.length < 10) {
+                alert("Por favor, insira um número válido com DDD e DDI (ex: 5511999999999)");
+                return;
+            }
+            sellerPhone = val;
+            localStorage.setItem('cookie_seller_phone', sellerPhone);
+            updateDirectWhatsappLink();
+            closeConfigModal();
+            alert("Número do WhatsApp atualizado com sucesso!");
+        }
+        function updateDirectWhatsappLink() {
+            document.getElementById('btnDirectWhatsapp').href = `https://wa.me/${sellerPhone}?text=Ol%C3%A1!%20Vim%20pelo%20card%C3%A1pio%20digital%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida.`;
+        }
+
+        // Renderizar Galeria de Produtos
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+            grid.innerHTML = '';
+
+            const filtered = products.filter(p => {
+                const matchCategory = (currentCategory === 'todos' || p.category === currentCategory);
+                const matchSearch = p.name.toLowerCase().includes(searchVal) || p.description.toLowerCase().includes(searchVal);
+                return matchCategory && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                document.getElementById('emptySearch').classList.remove('hidden');
+            } else {
+                document.getElementById('emptySearch').classList.add('hidden');
+            }
+
+            filtered.forEach(p => {
+                const qty = cart[p.id] ? cart[p.id].quantity : 0;
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition border border-choco-100/60 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <!-- Imagem do Produto com Tag -->
+                        <div class="relative h-48 w-full overflow-hidden bg-choco-100">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" loading="lazy" onerror="this.src='https://placehold.co/600x400/f2e8e5/4a2c20?text=Cookie+Bliss'">
+                            ${p.badge ? `<span class="absolute top-3 left-3 bg-choco-900/80 backdrop-blur-md text-pinksoft text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-lg">${p.badge}</span>` : ''}
+                        </div>
+                        
+                        <!-- Info -->
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="font-serif font-bold text-choco-900 text-base leading-snug">${p.name}</h3>
+                            </div>
+                            <p class="text-xs text-choco-500 line-clamp-2 mt-1 leading-relaxed">${p.description}</p>
+                        </div>
+                    </div>
+
+                    <!-- Preço e Controle de Quantidade -->
+                    <div class="px-4 pb-4 pt-1 flex items-center justify-between border-t border-dashed border-choco-100 mt-2">
+                        <span class="text-base font-serif font-bold text-choco-800">R$ ${p.price.toFixed(2).replace('.', ',')}</span>
+                        
+                        ${qty > 0 ? `
+                            <div class="flex items-center bg-choco-50 rounded-xl p-1 border border-choco-200">
+                                <button onclick="updateQty(${p.id}, -1)" class="w-7 h-7 rounded-lg bg-white text-choco-800 shadow-sm flex items-center justify-center font-bold text-xs hover:bg-choco-100 transition">-</button>
+                                <span class="px-3 font-semibold text-xs text-choco-900">${qty}</span>
+                                <button onclick="updateQty(${p.id}, 1)" class="w-7 h-7 rounded-lg bg-choco-800 text-white shadow-sm flex items-center justify-center font-bold text-xs hover:bg-choco-900 transition">+</button>
+                            </div>
+                        ` : `
+                            <button onclick="updateQty(${p.id}, 1)" class="bg-choco-800 hover:bg-choco-900 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5">
+                                <i class="fa-solid fa-plus text-[10px]"></i> Adicionar
+                            </button>
+                        `}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filtros de Categoria
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-choco-800', 'text-white');
+                btn.classList.add('bg-white', 'text-choco-800');
+            });
+            event.currentTarget.classList.remove('bg-white', 'text-choco-800');
+            event.currentTarget.classList.add('bg-choco-800', 'text-white');
+            renderProducts();
+        }
+
+        // Filtro de Busca
+        function filterProducts() {
+            renderProducts();
+        }
+
+        // Atualizar Quantidades no Carrinho
+        function updateQty(productId, delta) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            if (!cart[productId]) {
+                cart[productId] = { ...product, quantity: 0 };
+            }
+
+            cart[productId].quantity += delta;
+
+            if (cart[productId].quantity <= 0) {
+                delete cart[productId];
+            }
+
+            renderProducts();
+            updateCartBar();
+            renderCartModalItems();
+        }
+
+        // Atualiza Barra Flutuante do Carrinho
+        function updateCartBar() {
+            const bar = document.getElementById('cartBar');
+            const totalItems = Object.values(cart).reduce((sum, i) => sum + i.quantity, 0);
+            const totalPrice = Object.values(cart).reduce((sum, i) => sum + (i.price * i.quantity), 0);
+
+            document.getElementById('cartBadge').innerText = totalItems;
+            document.getElementById('cartBarTotal').innerText = `R$ ${totalPrice.toFixed(2).replace('.', ',')}`;
+
+            if (totalItems > 0) {
+                bar.classList.remove('translate-y-full');
+            } else {
+                bar.classList.add('translate-y-full');
+                closeCartModal();
+            }
+        }
+
+        // Controle dos Modais do Carrinho
+        function openCartModal() {
+            if (Object.keys(cart).length === 0) return;
+            renderCartModalItems();
+            const modal = document.getElementById('cartModal');
+            const content = document.getElementById('cartModalContent');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            content.classList.remove('translate-x-full');
+        }
+
+        function closeCartModal() {
+            const modal = document.getElementById('cartModal');
+            const content = document.getElementById('cartModalContent');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.add('translate-x-full');
+        }
+
+        // Alternar opções de entrega / retirada
+        function toggleDeliveryType() {
+            const isDelivery = document.querySelector('input[name="deliveryOption"]:checked').value === 'delivery';
+            const addressFields = document.getElementById('addressFields');
+            const deliveryFeeRow = document.getElementById('deliveryFeeRow');
+
+            if (isDelivery) {
+                addressFields.classList.remove('hidden');
+                deliveryFeeRow.classList.remove('hidden');
+            } else {
+                addressFields.classList.add('hidden');
+                deliveryFeeRow.classList.add('hidden');
+            }
+        }
+
+        // Renderiza itens dentro do modal
+        function renderCartModalItems() {
+            const container = document.getElementById('cartItemsList');
+            container.innerHTML = '';
+
+            let subtotal = 0;
+
+            Object.values(cart).forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between bg-white p-3 rounded-xl border border-choco-100 shadow-sm";
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg">
+                        <div>
+                            <p class="font-bold text-xs text-choco-900">${item.name}</p>
+                            <p class="text-xs text-choco-500">R$ ${item.price.toFixed(2).replace('.', ',')} un</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center bg-choco-50 rounded-lg p-0.5 border border-choco-200">
+                            <button onclick="updateQty(${item.id}, -1)" class="w-6 h-6 rounded bg-white text-choco-800 flex items-center justify-center text-xs font-bold shadow-sm">-</button>
+                            <span class="px-2 text-xs font-semibold">${item.quantity}</span>
+                            <button onclick="updateQty(${item.id}, 1)" class="w-6 h-6 rounded bg-choco-800 text-white flex items-center justify-center text-xs font-bold shadow-sm">+</button>
+                        </div>
+                        <span class="text-xs font-bold text-choco-900 min-w-[50px] text-right">R$ ${itemTotal.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+
+            document.getElementById('modalSubtotal').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('modalTotal').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+        }
+
+        // FORMATAR E ENVIAR PEDIDO VIA WHATSAPP
+        function sendOrderToWhatsapp() {
+            const name = document.getElementById('clientName').value.trim();
+            if (!name) {
+                alert("Por favor, informe o seu nome para o pedido.");
+                document.getElementById('clientName').focus();
+                return;
+            }
+
+            const deliveryOption = document.querySelector('input[name="deliveryOption"]:checked').value;
+            const address = document.getElementById('clientAddress').value.trim();
+            const ref = document.getElementById('clientRef').value.trim();
+            const payment = document.getElementById('paymentMethod').value;
+            const notes = document.getElementById('orderNotes').value.trim();
+
+            if (deliveryOption === 'delivery' && !address) {
+                alert("Por favor, preencha o seu endereço para entrega.");
+                document.getElementById('clientAddress').focus();
+                return;
+            }
+
+            // Montar Mensagem do Pedido
+            let text = `🍪 *NOVO PEDIDO - SBS COOKIES* 🍪\n\n`;
+            text += `👤 *Cliente:* ${name}\n`;
+            text += `🚚 *Tipo:* ${deliveryOption === 'delivery' ? 'Entrega em Domicílio' : 'Retirada na Loja'}\n`;
+
+            if (deliveryOption === 'delivery') {
+                text += `📍 *Endereço:* ${address}\n`;
+                if (ref) text += `📌 *Ponto de Ref.:* ${ref}\n`;
+            }
+
+            text += `💳 *Pagamento:* ${payment}\n`;
+            if (notes) text += `📝 *Observações:* ${notes}\n`;
+
+            text += `\n🛒 *ITENS DO PEDIDO:*\n`;
+
+            let subtotal = 0;
+            Object.values(cart).forEach(item => {
+                const totalItem = item.price * item.quantity;
+                subtotal += totalItem;
+                text += `• ${item.quantity}x ${item.name} (R$ ${totalItem.toFixed(2).replace('.', ',')})\n`;
+            });
+
+            text += `\n💰 *Total dos Produtos:* R$ ${subtotal.toFixed(2).replace('.', ',')}\n`;
+            if (deliveryOption === 'delivery') {
+                text += `*(Taxa de entrega a calcular conforme o bairro)*\n`;
+            }
+
+            text += `\nAguardando confirmação da SBS Cookies! ✨`;
+
+            // Codificar para URL do WhatsApp
+            const encodedText = encodeURIComponent(text);
+            const whatsappUrl = `https://wa.me/${sellerPhone}?text=${encodedText}`;
+
+            // Abrir WhatsApp
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
